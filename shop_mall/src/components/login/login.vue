@@ -32,6 +32,7 @@
     </div>
 </template>
 <script>
+import { setCookie } from "../../tool/cookie.js";
 export default {
   data() {
     return {
@@ -55,26 +56,29 @@ export default {
         this.flag = true;
         return;
       }
-      this.$http.post("/api/user", {
-            phone:this.phone,
-            pwd:this.pwd
-        }).then(data => {
-            console.log(data)
-        if (data.data.code == "1003") {
-        //   this.$router.history.push("/index/shou");
-        // console.log(data.data.token)
-        document.cookie=`token=${data.data.token}`
-        this.$router.push({
-            name:this.$route.query.from||"shouye"
+      this.$http
+        .post("/api/user", {
+          phone: this.phone,
+          pwd: this.pwd
         })
-        } else {
-          this.flag = true;
-          this.errMsg = data.data.msg;
-          return false;
-        }
-      });
-    },
-   
+        .then(data => {
+          console.log(data);
+          if (data.data.code == "1003") {
+            // this.$router.history.push("/index/shou");
+            // console.log(data.data.token)
+            setCookie("token",data.data.token)
+            //  document.cookie=`token=${data.data.token}`
+            //this.$route.query.froms//登录完判断去哪
+            this.$router.push({
+              name: this.$route.query.froms || "shouye"//防止登录时间过期
+            });
+          } else {
+            this.flag = true;
+            this.errMsg = data.data.msg;  
+            return false;
+          }
+        });
+    }
   }
 };
 </script>

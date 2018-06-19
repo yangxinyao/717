@@ -38,9 +38,16 @@ For detailed explanation on how things work, consult the [docs for vue-loader](h
 
   jwt.verify(token, secretOrPublicKey, [options, callback])
 
-  eg: jwt.verify(req.body, "userMsg")
+  eg: jwt.verify(req.body, "userMsg"，function(err,decoded){
+
+    err 错误信息 decoded解码后的用户信息
+  })
   
   jwt.decode(token [, options])
+
+  cookie 获取,删除,设置
+
+  导航守卫设置路由权限
 
  ##跨域请求 
     jsonp 仅限于get方式
@@ -60,3 +67,9 @@ For detailed explanation on how things work, consult the [docs for vue-loader](h
        "Access-Contorl-Allow-Orign:"http://localhost:8080"",
        "Access-Contorl-Allow-Headers:Content-type"
         (ps: 多个headers中间加空格 eg:Content-type token)
+
+         (
+           这个配置支持post
+           "Access-Control-Allow-Origin":"*",
+        "Accept-Content":"application/json,plain/text",
+        "Access-Control-Allow-Headers":"Content-Type" //post)

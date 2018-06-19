@@ -1,10 +1,11 @@
 <template>
     <div class="wrapper">
       <router-view></router-view> 
-  
+     
+      <!-- 底部 -->
+    <Foot class="footer"></Foot>
     </div>
-       
-  
+    
 </template>
 <script>
 import Foot from "./com/foot.vue"

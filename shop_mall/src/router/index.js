@@ -6,6 +6,7 @@ import Search from "../components/search/search.vue"
 import Login from "../components/login/login.vue"
 import regirest from "../components/login/regirest.vue"
 import Detail from "../components/com/detail.vue"
+import Setup from "../components/sect/mine/setup.vue"
 //
 import shou from "../components/sect/shou.vue"
 import fen from "../components/sect/fen.vue"
@@ -69,20 +70,23 @@ let router = new Router({
       name: "detail",
       component: Detail
     },
-
-
+    {//设置
+      path: "/setup",
+      name: "setup",
+      component: Setup
+    },
 
   ]
 
 })
 router.beforeEach((to, from, next) => {
-  console.log(to)
+  // console.log(to)
   if (to.name == "mine" || to.name == "shopCar") {
     let token = getCookie("token")
     if (!token) {
       next({
         name: "login",
-        query:{from:to.name}
+        query:{froms:to.name}//login时判断是去首页还是进入的页面
       })
     } else {
       next()

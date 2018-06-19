@@ -69,13 +69,11 @@
     <div class="dowMsg">{{dowMsg}}</div>
    </div>
    </div>
-      <!-- 底部 -->
-    <Foot class="footer"></Foot>
+  
  </div>
 </template>
 <script>
 import Head from "../com/head.vue";
-import Foot from "../com/foot.vue";
 import Swiper from "swiper";
 import "swiper/dist/css/swiper.min.css";
 import listItem from "../com/listItem.vue";
@@ -104,7 +102,7 @@ export default {
   },
   components: {
     Head,
-    Foot,
+   
     listItem
   },
   mounted() {

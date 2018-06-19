@@ -1,6 +1,6 @@
 const fs = require("fs")
 const path = require("path")
-const jwt=require("jsonwebtoken")
+const jwt = require("jsonwebtoken")
 
 //定义接口
 module.exports = function (app) {
@@ -21,7 +21,6 @@ module.exports = function (app) {
             setTimeout(() => {
                 res.json(list)
             }, 2000);
-
         }
     })
     //分类接口
@@ -35,8 +34,8 @@ module.exports = function (app) {
     //登录
     app.post("/api/user", function (req, res) {
         let { phone, pwd } = req.body;
-        let token = jwt.sign(req.body, "userMsg", { expiresIn: 60 }) //加密
-    //    console.log(token)
+        let token = jwt.sign(req.body, "userMsg", { expiresIn: 60*60 }) //加密
+        //    console.log(token)
         let userPath = path.resolve(__dirname + "/user");
         let user = JSON.parse(fs.readFileSync(userPath + "/user.json", "utf-8"));
         user.forEach((i) => {//遍历数据查看用户是否已注册
@@ -44,19 +43,19 @@ module.exports = function (app) {
                 ind = i
             }
         })
-        if (ind){
+        if (ind) {
             res.json({
-                  code:"1003",
-                  msg:"登陆成功",
-                  token
+                code: "1003",
+                msg: "登陆成功",
+                token
             })
-        }else{
+        } else {
             res.json({
                 code: "1004",
                 msg: "用户名或密码错误",
             })
         }
-       
+
     });
     //注册
     app.post("/api/regirest", function (req, res) {
@@ -71,9 +70,9 @@ module.exports = function (app) {
             }
         })
         if (ind) {
-            res.json({ code: "1001", msg: "该用户已存在"})
+            res.json({ code: "1001", msg: "该用户已存在" })
             return
-        } 
+        }
         user.push(req.body)
         fs.writeFile(userPath + "/user.json", JSON.stringify(user), function (err) {
             if (err) {
@@ -83,23 +82,62 @@ module.exports = function (app) {
         res.json({ code: "1002", msg: "注册成功" })
     });
     //商品列表
-    app.post("/api/goodslist",(req,res)=>{
-        jwt.verify(req.body.token, "userMsg",function(err,decoded){
-            if(err){
+    app.post("/api/goodslist", (req, res) => {
+        jwt.verify(req.body.token, "userMsg", function (err, decoded) {
+            if (err) {
                 res.json({
                     code: "1005",
                     msg: err
                 })
-            }else{
+            } else {
                 //decoded { phone: '13552567473', pwd: '123456', iat: 1529054061 }
-                console.log(decoded)
+                // console.log(decoded)
                 res.json({
                     code: "1006",
                     msg: "请求成功"
                 })
             }
         })
-       
+    });
+    //添加购物车 
+    app.post("/api/shopCar", function (req, res) {
+        // console.log(req.body)
+        if (!req.body.token){
+            res.status(304)
+            res.json({
+                code: "1020",
+                msg: "token不存在"
+            })
+        }
+        jwt.verify(req.body.token, "userMsg", function (err, decoded) {
+            if (err) {
+                res.json({
+                    code: "1007",
+                    msg: "登录超时，请重新登录"
+                })
+            } else {
+                const cartPath = __dirname + "/cart/cartlist.json"
+                let cartlist = JSON.parse(fs.readFileSync(cartPath, "utf-8"));
+                if (cartlist[decoded.phone]){
+                    cartlist[decoded.phone].push(req.body.data)
+                }else{
+                    cartlist[decoded.phone] = [req.body.data];
+                }
+                fs.writeFile(cartPath, JSON.stringify(cartlist), (err) => {
+                    if (err) {
+                        res.json({
+                            code: "1008",
+                            msg: "写入错误"
+                        })
+                    }else{
+                        res.json({
+                            code: "1009",
+                            msg: "添加成功"
+                        })
+                    }
+                })
+            }
+        })
 
     })
 
