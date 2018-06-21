@@ -7,6 +7,9 @@ import Login from "../components/login/login.vue"
 import regirest from "../components/login/regirest.vue"
 import Detail from "../components/com/detail.vue"
 import Setup from "../components/sect/mine/setup.vue"
+import Account from "../components/sect/mine/account.vue"
+import Address from "../components/sect/mine/address.vue"
+import Customer from "../components/sect/mine/customer.vue"
 //
 import shou from "../components/sect/shou.vue"
 import fen from "../components/sect/fen.vue"
@@ -75,6 +78,21 @@ let router = new Router({
       name: "setup",
       component: Setup
     },
+    {//账户余额
+      path: "/account",
+      name: "account",
+      component: Account
+    },
+    {//地址管理
+      path: "/address",
+      name: "address",
+      component: Address
+    },
+    {//我的客服
+      path: "/customer",
+      name: "customer",
+      component: Customer
+    },
 
   ]
 
@@ -86,12 +104,12 @@ router.beforeEach((to, from, next) => {
     if (!token) {
       next({
         name: "login",
-        query:{froms:to.name}//login时判断是去首页还是进入的页面
+        query: { froms: to.name }//login时判断是去首页还是进入的页面
       })
     } else {
       next()
     }
-  }else{
+  } else {
     next()
   }
 

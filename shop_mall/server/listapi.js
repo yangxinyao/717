@@ -34,7 +34,7 @@ module.exports = function (app) {
     //登录
     app.post("/api/user", function (req, res) {
         let { phone, pwd } = req.body;
-        let token = jwt.sign(req.body, "userMsg", { expiresIn: 60*60 }) //加密
+        let token = jwt.sign(req.body, "userMsg", { expiresIn: 60 * 60 }) //加密
         //    console.log(token)
         let userPath = path.resolve(__dirname + "/user");
         let user = JSON.parse(fs.readFileSync(userPath + "/user.json", "utf-8"));
@@ -81,28 +81,10 @@ module.exports = function (app) {
         })
         res.json({ code: "1002", msg: "注册成功" })
     });
-    //商品列表
-    app.post("/api/goodslist", (req, res) => {
-        jwt.verify(req.body.token, "userMsg", function (err, decoded) {
-            if (err) {
-                res.json({
-                    code: "1005",
-                    msg: err
-                })
-            } else {
-                //decoded { phone: '13552567473', pwd: '123456', iat: 1529054061 }
-                // console.log(decoded)
-                res.json({
-                    code: "1006",
-                    msg: "请求成功"
-                })
-            }
-        })
-    });
     //添加购物车 
     app.post("/api/shopCar", function (req, res) {
         // console.log(req.body)
-        if (!req.body.token){
+        if (!req.body.token) {
             res.status(304)
             res.json({
                 code: "1020",
@@ -118,9 +100,9 @@ module.exports = function (app) {
             } else {
                 const cartPath = __dirname + "/cart/cartlist.json"
                 let cartlist = JSON.parse(fs.readFileSync(cartPath, "utf-8"));
-                if (cartlist[decoded.phone]){
+                if (cartlist[decoded.phone]) {
                     cartlist[decoded.phone].push(req.body.data)
-                }else{
+                } else {
                     cartlist[decoded.phone] = [req.body.data];
                 }
                 fs.writeFile(cartPath, JSON.stringify(cartlist), (err) => {
@@ -129,7 +111,7 @@ module.exports = function (app) {
                             code: "1008",
                             msg: "写入错误"
                         })
-                    }else{
+                    } else {
                         res.json({
                             code: "1009",
                             msg: "添加成功"
@@ -139,6 +121,59 @@ module.exports = function (app) {
             }
         })
 
+    });
+    //购物车商品列表
+    app.post("/api/goodslist", (req, res) => {
+        jwt.verify(req.body.token, "userMsg", function (err, decoded) {
+            if (err) {
+                res.json({
+                    code: "1005",
+                    msg: err
+                })
+            } else {
+                //decoded { phone: '13552567473', pwd: '123456', iat: 1529054061 }
+                let goods = JSON.parse(fs.readFileSync(__dirname + "/cart/cartlist.json", "utf-8"))
+                // console.log(goods[decoded.phone])
+                res.json({
+                    code: "1006",
+                    msg: "请求成功",
+                    data: goods[decoded.phone] || []
+                })
+            }
+        })
+    });
+    //购物车编辑商品
+    app.post("/api/edit", function (req, res) {
+        if (req.body.token) {
+            jwt.verify(req.body.token, "userMsg", function (err, decoded) {
+                if (err) {
+                    res.json({
+                        code: 0,
+                        msg: err
+                    })
+                } else {
+                    //decoded { phone: '13552567473', pwd: '123456', iat: 1529054061 }
+                    let goods = JSON.parse(fs.readFileSync(__dirname + "/cart/cartlist.json", "utf-8"))
+                    // console.log(goods[decoded.phone])
+                    //wareId
+                    let arr =[]
+                     req.body.data.forEach((v, i) => {
+                        if (v.checked) {
+                            arr.push(i)
+                        }
+                         req.body.data.splice(req.body.data[arr[0]])
+                    })
+                    res.json({
+                        code: 1,
+                        msg: "请求成功",
+                        data: goods[decoded.phone] || []
+                    })
+                }
+            })
+        }
     })
+
+
+
 
 }

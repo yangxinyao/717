@@ -7,30 +7,29 @@
 				<span>购物车</span>
 			</div>
 			<div>
-				<span class="bianji">编辑</span>
+				<span class="bianji" @click="changeEdit">{{edit}}</span>
 				<span>✉</span>
 			</div>
 		</div>
         <div class='mains'>
-			<div class="list">
-				你的购物车啥也没有！
-			</div>
-            <div class="list">
-               <goodsitem></goodsitem>
-            </div>
+          <div class="list" v-show="shopCarlist.length==0">
+            你的购物车啥也没有！
+          </div>
+            <goodsitem v-for="(item,index) in shopCarlist" :key="index" v-bind:data="{item,index}"></goodsitem>
         </div>
+        
        <div class="bottom">
 			<div class="bottomLeft">
-				<input type="checkbox">
+				<input type="checkbox" @click="allCheck" :checked="flag">
 				<span>全选</span>
 			</div>
 			<div class="bottomRight">
-				<div class="allPrice">
-					<span>合计<b>￥0</b></span>
+				<div class="allPrice" >
+					<span>合计<b>￥{{allPrice}}</b></span>
 					<span>(运费：￥0)</span>
 				</div>
 				<div>
-					<button>结算</button>
+					<button>{{account}}</button>
 				</div>
 			</div>
 		</div>
@@ -39,36 +38,51 @@
 <script>
 import { getCookie } from "../../tool/cookie.js";
 import goodsitem from "../com/goodsitem.vue";
+import { mapState } from "vuex";
 export default {
   data() {
-    return {};
+    return {
+      edit:"编辑",
+      account:"结算"
+    };
   },
   components: {
     goodsitem
   },
+  created() {},
   mounted() {
-    this.$http
-      .post("/api/goodslist", {
-        token: getCookie("token")
-      })
-      .then(res => {
-        if (res.data.code == "1006") {
-          this.$router.push({
-            name: "shopCar"
-          });
-        } else {
-        }
+    this.$store.dispatch("shopCarData");
+  },
+  methods: {
+    allCheck() {
+      this.$store.dispatch("allcheck");
+    },
+    changeEdit() {
+      this.$http.post("/api/edit", { 
+        token: getCookie("token"),
+        data:this.$store.state.shopCarlist
+         }).then(res => {
+        console.log(res);
       });
+      // this.edit="完成"
+      // this.account="删除"
+    }
+  },
+  computed: {
+    //获取购物车数据
+    ...mapState(["shopCarlist"]),
+    ...mapState(["allPrice"]),
+    ...mapState(["flag"])
   }
 };
 </script>
 <style scoped>
-.box{
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	height:100%;
-	background-color: #eeeeee;
+.box {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: #eeeeee;
 }
 .head {
   width: 100%;
@@ -83,23 +97,28 @@ export default {
 .head div {
   display: flex;
 }
-.mains{
-	width: 100%;
-	flex: 1;
-	overflow-y: scroll;
+.mains {
+  width: 100%;
+  flex: 1;
+  overflow-y: scroll;
 }
-.list{
-	width: 100%;
-	height:2.65rem;
-	display:flex;
-	margin-bottom:.2rem;
-	background-color:#fff;
-	align-items:center;
-	justify-content:space-around;
+.list {
+  width: 100%;
+  height: 2.65rem;
+  display: flex;
+  margin-bottom: 0.2rem;
+  background-color: #fff;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 0.2rem;
+  box-sizing: border-box;
 }
 .bottom {
   width: 100%;
   height: 0.97rem;
+  position: fixed;
+  bottom: 1.1rem;
+  left: 0;
   background-color: #fff;
   display: flex;
   justify-content: space-around;

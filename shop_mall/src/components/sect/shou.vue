@@ -63,13 +63,13 @@
     <!-- 商品列表 -->
     <ul class="list_box">
       <li v-for="(item,index) in list" :key="index">
-          <listItem v-bind:data="item"></listItem>
+          <listItem v-bind:data="item" :parent="$refs.tool"></listItem>
       </li>
     </ul>
     <div class="dowMsg">{{dowMsg}}</div>
    </div>
    </div>
-  
+  <tooltip ref="tool"></tooltip>
  </div>
 </template>
 <script>
@@ -102,7 +102,6 @@ export default {
   },
   components: {
     Head,
-   
     listItem
   },
   mounted() {
@@ -141,11 +140,11 @@ export default {
       let wH = this.$refs.wrap.offsetHeight;
       let docH=this.$refs.scroll.offsetHeight;
       let scrH=this.$refs.wrap.scrollTop
-    if(docH-wH-scrH<40&&this.shock){
+    if(docH-wH-scrH<30&&this.shock){
       this.shock=false
       this.page++;
       if(this.page<5){
-        this.$http("/index/recommend?page="+`${this.page}`).then(res => {
+        this.$http(`/index/recommend?page=${this.page}`).then(res => {
           if(res.code==1000){
             this.dowMsg="到底了..."
           }

@@ -15,7 +15,8 @@ export default {
     data: {
       required: true,
       type: Object
-    }
+    },
+    parent:{}
   },
   methods: {
     togoDetail(data) {
@@ -37,10 +38,11 @@ export default {
       this.$http
         .post("/api/shopCar", {
           token: getCookie("token"),
-          data: this.data
+          data: {count:1,checked:false,...this.data}
         })
         .then(res => {
           if (res.data.code == "1009") {
+            this.parent.active("添加成功!")
           } else {
             console.log(res);
           }

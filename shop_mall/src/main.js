@@ -15,10 +15,19 @@ Vue.use(LazyLoad,{
   loading:"/src/assets/loading.png"
 })
 //vuex
+import vuex from "vuex"
+Vue.use(vuex)
 import store from "./store/store.js"
+//自定义消息弹框
+import Tooltip from "../src/plugins/tooltip/tooltip.js"
+Vue.use(Tooltip,{
+  name:"tooltip",
+  timeout:2000
+})
+
 new Vue({
   el: '#app',
   router,
-  store,
+  store, 
   render: h => h(App)
 })
