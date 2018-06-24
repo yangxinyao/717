@@ -363,6 +363,10 @@ margin: 0 auto;
 pre{
   background: #fff;
 }
+body,html{
+  width:100%;
+  height:100%;
+}
 
 
 

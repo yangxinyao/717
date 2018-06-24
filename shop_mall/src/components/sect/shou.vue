@@ -140,7 +140,7 @@ export default {
       let wH = this.$refs.wrap.offsetHeight;
       let docH=this.$refs.scroll.offsetHeight;
       let scrH=this.$refs.wrap.scrollTop
-    if(docH-wH-scrH<30&&this.shock){
+    if(docH-wH-scrH<40&&this.shock){
       this.shock=false
       this.page++;
       if(this.page<5){

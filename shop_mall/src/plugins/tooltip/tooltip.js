@@ -10,13 +10,19 @@ import Toolitem from "./tooltip.vue"
 import "./tooltip.css"
 let tooltip = {
     install(Vue, options) {
-        console.log(options)
+        //  console.log(options)
+        const toolBus = new Vue({});
+
+        Object.defineProperty(Vue.prototype, "$toolBus", {
+            value: toolBus
+        })
         //vue全局组件
         Vue.component("tooltip", {
             template: `
             <div class="tooltip">
             <transition-group name="toast"> 
-               <Toolitem v-for="(item,index) in msg" :key="index">{{item}}</Toolitem>
+               <Toolitem v-for="(item,index) in msg" :key="index" :timeout="options.timeout">
+               {{item}}</Toolitem>
             </transition-group>
             </div>`,
             components: {
@@ -25,7 +31,8 @@ let tooltip = {
             data() {
                 return {
                     msg: [],
-                    timeout:options.timeout
+                    options,
+                    // timeout:options.timeout
                 }
             },
             methods:{
@@ -35,6 +42,11 @@ let tooltip = {
                     }
                     this.msg.push(msg);
                 }
+            },
+            mounted () {
+                toolBus.$on('tooltip', (msg) => {
+                    this.active(msg)
+                })
             }
         })
     }

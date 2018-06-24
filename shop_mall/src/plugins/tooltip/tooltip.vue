@@ -6,26 +6,24 @@
 </template>
 <script>
 export default {
+  props: {
+    timeout: {
+      type: Number
+    }
+  },
   data(){
     return{
       isActive:false,
-      timeout:2000
+      _timeout:2000
     }
   },
   mounted(){
     this.isActive=true;
     setTimeout(() => {
       this.isActive=false;
-    }, this.timeout);
+    }, this.timeout||this._timeout);
   },
-  methods: {
-    active(){
-      
-    }
-  }
-
-    
-
+  
 };
 </script>
 <style scoped>

@@ -10,9 +10,11 @@ import Setup from "../components/sect/mine/setup.vue"
 import Account from "../components/sect/mine/account.vue"
 import Address from "../components/sect/mine/address.vue"
 import Customer from "../components/sect/mine/customer.vue"
+import Addadr from "../components/sect/mine/addadr.vue"
 //
 import shou from "../components/sect/shou.vue"
-import fen from "../components/sect/fen.vue"
+// import fen from "../components/sect/fen.vue"
+const fen = () =>import("../components/sect/fen.vue")
 import shopCar from "../components/sect/shopCar.vue"
 import mine from "../components/sect/mine.vue"
 
@@ -92,6 +94,11 @@ let router = new Router({
       path: "/customer",
       name: "customer",
       component: Customer
+    },
+    {//新增地址
+      path: "/addadr",
+      name: "addadr",
+      component: Addadr
     },
 
   ]

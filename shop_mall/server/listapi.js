@@ -4,9 +4,12 @@ const jwt = require("jsonwebtoken")
 
 //定义接口
 module.exports = function (app) {
+    app.get('/index/', function (req, res, next) {
+        res.render('index', { title: 'HTML' });
+    });
+
     //商品列表接口
     const listPath = path.join(__dirname, "/shopList")
-
     app.get("/index/recommend", (req, res, next) => {
         // console.log(listPath + `/list${req.query.page}.json`)
         if (req.query.page > 5) {
@@ -156,12 +159,12 @@ module.exports = function (app) {
                     let goods = JSON.parse(fs.readFileSync(__dirname + "/cart/cartlist.json", "utf-8"))
                     // console.log(goods[decoded.phone])
                     //wareId
-                    let arr =[]
-                     req.body.data.forEach((v, i) => {
+                    let arr = []
+                    req.body.data.forEach((v, i) => {
                         if (v.checked) {
                             arr.push(i)
                         }
-                         req.body.data.splice(req.body.data[arr[0]])
+                        req.body.data.splice(req.body.data[arr[0]])
                     })
                     res.json({
                         code: 1,
@@ -171,9 +174,56 @@ module.exports = function (app) {
                 }
             })
         }
+    });
+    //新增地址
+    app.post("/api/addadr", function (req, res) {
+        console.log(req.body)
+        if (req.body.token) {
+            jwt.verify(req.body.token, "userMsg", function (err, decoded) {
+                if (err) {
+                    res.json({
+                        code: 0,
+                        msg: err
+                    })
+                } else {
+                    let addPath = __dirname + "/address/address.json";
+                    let add = JSON.parse(fs.readFileSync(addPath, "utf-8"))
+                    if (add[decoded.phone]) {
+                        add[decoded.phone].push(req.body.data)
+                    } else {
+                        add[decoded.phone] = [req.body.data];
+                    }
+                    fs.writeFile(addPath, JSON.stringify(add), (err) => {
+                        if (err) {
+                            throw err
+                        } else {
+                            res.json({
+                                code: 1,
+                                msg: "添加成功"
+                            })
+                        }
+                    })
+                }
+            })
+        }
     })
-
-
-
+    // 地址管理
+    app.post("/api/address", function (req, res) {
+        jwt.verify(req.body.token, "userMsg", function (err, decoded) {
+            if (err) {
+                res.json({
+                    code: 0,
+                    msg: err
+                })
+            } else {
+                let addList = JSON.parse(fs.readFileSync(__dirname + "/address/address.json", "utf-8"))
+                res.json({
+                    code: "1006",
+                    msg: "请求成功",
+                    data: addList[decoded.phone] || []
+                })
+            }
+        })
+    })
 
 }

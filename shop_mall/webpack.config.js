@@ -1,7 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
 
-var app=require("./server/index.js")
 
 module.exports = {
   entry: './src/main.js',
@@ -53,17 +52,17 @@ module.exports = {
     },
     extensions: ['*', '.js', '.vue', '.json']
   },
-  plugins: [
-    new webpack.DefinePlugin({
-    'process.env': {
-      NODE_ENV: '"development"'
-    }
-  })],
+  // plugins: [
+  //   new webpack.DefinePlugin({
+  //     //额外配置变量或对象
+  //   'process.env': {
+  //     NODE_ENV: '"development"'
+  //   }
+  // })],
   devServer: {
     historyApiFallback: true,
     noInfo: true,
     overlay: true,
-    before: app,
   },
   performance: {
     hints: false

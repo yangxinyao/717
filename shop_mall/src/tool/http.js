@@ -5,7 +5,7 @@ const testUrl="http://localhost:3000"
 //线上服务器
 const onlineUrl=""
 let instance=axios.create({
-    baseURL: process.env.NODE_ENV === "development" ? testUrl : onlineUrl,
+    baseURL: process.env.NODE_ENV === "production" ? onlineUrl:testUrl,
     // headers
 }); 
 instance.interceptors.request.use((config)=>{

@@ -24,6 +24,16 @@ Vue.use(Tooltip,{
   name:"tooltip",
   timeout:2000
 })
+//自定义dialog
+import Dialog from "../src/plugins/dialog/dialog.js"
+Vue.use(Dialog,{
+  title:"是否确认删除改地址",
+  ok:"确定",
+  off:"取消",
+  // component:`<div>
+  // queding
+  // </div>`
+})
 
 new Vue({
   el: '#app',
