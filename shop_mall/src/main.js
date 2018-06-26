@@ -27,13 +27,12 @@ Vue.use(Tooltip,{
 //自定义dialog
 import Dialog from "../src/plugins/dialog/dialog.js"
 Vue.use(Dialog,{
-  title:"是否确认删除改地址",
-  ok:"确定",
-  off:"取消",
-  // component:`<div>
-  // queding
-  // </div>`
+  name:"dialpg"
 })
+//引入mint-ui
+import Mint from "mint-ui"
+import 'mint-ui/lib/style.css';
+Vue.use(Mint);
 
 new Vue({
   el: '#app',

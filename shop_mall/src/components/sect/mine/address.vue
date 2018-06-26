@@ -30,24 +30,27 @@ import { getCookie } from "../../../tool/cookie.js";
 export default {
   data() {
     return {
-      data:[]
+      data: []
     };
   },
-  created(){
-    this.$http.post("/api/address",{token:getCookie("token")})
-    .then((res)=>{
-      console.log(res.data.data)
-       this.data=res.data.data
-    })
+  created() {
+    this.$http.post("/api/address", { token: getCookie("token") }).then(res => {
+      console.log(res.data.data);
+      this.data = res.data.data;
+    });
   },
   methods: {
     editFn() {
-      this.$refs.dia.show();
+      this.$refs.dia.show({
+        title: "是否确认删除改地址",
+        ok: "确定",
+        off: "取消"
+      });
     },
-    adrFn(){
+    adrFn() {
       this.$router.push({
-        name:"addadr"
-      })
+        name: "addadr"
+      });
     }
   }
 };
@@ -124,18 +127,17 @@ export default {
   color: #fff;
   font-size: 0.3rem;
 }
-.address_no{
+.address_no {
   width: 100%;
   height: 2.65rem;
   padding: 0 0.2rem;
   text-align: center;
-  background:#fff;
+  background: #fff;
   line-height: 2.65rem;
   position: fixed;
-  left:0;
-  top:40%;
-  transform: translate(0,-50%,0)
-
+  left: 0;
+  top: 40%;
+  transform: translate(0, -50%, 0);
 }
 </style>
 

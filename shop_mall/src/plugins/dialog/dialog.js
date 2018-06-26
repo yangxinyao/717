@@ -26,19 +26,20 @@ let Dialog = {
             data(){
                 return {
                     isActive:false,
-                    options,  
+                    options
                 }
             },
             methods:{
-                show(){
-                  this.isActive=true; 
-                }
+                show(msg){
+                    this.options = msg;
+                    this.isActive = true; 
+                }   
             },
             mounted(){
-              
-
+                diaBus.$on("dialog",(msg)=>{
+                   this.show(msg)
+                })
             }
-          
         })
     }
 }
