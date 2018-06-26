@@ -9,7 +9,7 @@
        <div class="address_list" v-for="(item,index) in data" :key="index">
          <div class="adr_top">
             <p class="adr_user"><span>{{item.name}}</span><span>{{item.phone}}</span></p>
-            <h3 class="user_adr">北京市海淀区上地街道北京八维研修学院</h3>
+            <h3 class="user_adr">{{item.provice}} {{item.city}} {{item.area}} {{item.xiangxi}}</h3>
          </div>
          <div class="edit">
              <label for=""><input type="checkbox" class="moren" />默认</label>

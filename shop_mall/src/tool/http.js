@@ -25,6 +25,9 @@ instance.interceptors.response.use((response) => {
 }, (err) => {
     return Promise.reject(err)
 })
+let anotherInstance=axios.create({
+
+})
 //vue 插件
 let httpPlugin = {
     install(Vue) {
@@ -33,5 +36,6 @@ let httpPlugin = {
         })
     }
 }
+export { anotherInstance}
 export { instance }
 export default httpPlugin

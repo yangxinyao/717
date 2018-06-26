@@ -29,7 +29,7 @@
           <button  @click="exitLogin">退出登录</button>
         </div>
       </div>
-      <Dialog></Dialog>
+      <Dialog ref="exitLogin"></Dialog>
     </div>
 </template>
 <script>
@@ -40,15 +40,27 @@ export default {
   },
   methods: {
     exitLogin() {
-      delCookie("token");
+      this.$diaBus.$emit("dialog", {
+        title: "确定要退出登录吗？",
+        ok: "确认",
+        off: "取消"
+      })
+      this.$refs.exitLogin.successBtn(this.delFn)
+      // delCookie("token");
+      // this.$router.push("/index/mine");
+      // this.$diaBus.$emit("success",this.delFn)
+    },
+    delFn(){
+       delCookie("token");
       this.$router.push("/index/mine");
     },
-    touFn(){//改头像
-      this.$diaBus.$emit("dialog",{
-        title:"拍照",
-        ok:"取消",
-        off:"从相册选择",
-      })
+    touFn() {
+      //改头像
+      this.$diaBus.$emit("dialog", {
+        title: "拍照",
+        ok: "取消",
+        off: "从相册选择"
+      });
     }
   }
 };
@@ -81,7 +93,7 @@ export default {
   padding-left: 0.2rem;
   background: #fff;
   margin-top: 0.2rem;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 .set_tou {
   width: 100%;
@@ -106,13 +118,13 @@ export default {
   height: 100%;
   display: block;
 }
-.set_username{
+.set_username {
   width: 100%;
   height: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #f0f0f0; 
+  border-bottom: 1px solid #f0f0f0;
 }
 .exit_login {
   width: 4rem;

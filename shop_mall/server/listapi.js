@@ -179,19 +179,20 @@ module.exports = function (app) {
     app.post("/api/addadr", function (req, res) {
         console.log(req.body)
         if (req.body.token) {
-            jwt.verify(req.body.token, "userMsg", function (err, decoded) {
+            jwt.verify(req.body.token,"userMsg", function (err, decoded) {
+                console.log(decoded)
                 if (err) {
                     res.json({
                         code: 0,
-                        msg: err
+                        msg:"登录超时，请重新登陆"
                     })
                 } else {
                     let addPath = __dirname + "/address/address.json";
                     let add = JSON.parse(fs.readFileSync(addPath, "utf-8"))
-                    if (add[decoded.phone]) {
-                        add[decoded.phone].push(req.body.data)
+                    if (add[decoded.name]) {
+                        add[decoded.name].push(req.body.data)
                     } else {
-                        add[decoded.phone] = [req.body.data];
+                        add[decoded.name] = [req.body.data];
                     }
                     fs.writeFile(addPath, JSON.stringify(add), (err) => {
                         if (err) {

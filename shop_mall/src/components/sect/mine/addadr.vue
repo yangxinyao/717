@@ -5,6 +5,25 @@
        </div>
        <p class="p_inp"><input type="text" placeholder="收件人姓名" v-model="name"></p>
        <p class="p_inp"><input type="text" placeholder="手机号" v-model="phone"></p>
+       <div class="pcr_box">
+            <div class="pcr_list">
+              <div class="select_pro">
+                <multiselect v-model="provice" :options="providelist" placeholder="请选择省份"
+                @select="changeProve" label="name"
+                ></multiselect>
+              </div>
+              <div class="select_pro">
+                <multiselect v-model="city" :options="citylist" placeholder="请选择城市"
+                @select="changeCity" label="name"
+                ></multiselect>
+              </div>
+          </div>
+          <div class="select_xiangxi">
+                <multiselect v-model="area" :options="arealist" placeholder="请选择地区"></multiselect>
+          </div>
+       </div>
+       <p class="p_inp"><input type="text" placeholder="详细地址" v-model="xiangxi"></p>
+       
       <div class="adr_btn">
          <button @click="saveFn">保存</button>
       </div>
@@ -13,39 +32,95 @@
 </template>
 <script>
 import { getCookie } from "../../../tool/cookie.js";
+import Multiselect from "vue-multiselect";
+import "vue-multiselect/dist/vue-multiselect.min.css";
+import { anotherInstance } from "../../../tool/http.js";
 export default {
+  components: { Multiselect },
   data() {
     return {
       name: "",
-      phone: ""
+      phone: "",
+      provice: "",
+      city: "",
+      area: "",
+      xiangxi: "",
+      providelist: [],
+      citylist: [],
+      arealist: []
     };
   },
-  created(){
-    this.$http.post("/api/address",{token: getCookie("token")})
-    .then((res)=>{
-console.log(res)
-    })
+  created() {
+    anotherInstance.get("/server/address/pcrdata.json").then(res => {
+      this.providelist = res.data;
+    });
   },
   methods: {
+    changeProve(a) {
+      this.citylist = a.city;
+      this.city = "";
+      this.area = "";
+    },
+    changeCity(a) {
+      this.arealist = a.area;
+      this.area = "";
+    },
     saveFn() {
+      let data = {
+        name: this.name,
+        phone: this.phone,
+        provice: this.provice.name,
+        city: this.city.name,
+        area: this.area,
+        xiangxi: this.xiangxi
+      };
+
+      if (
+        !data.name ||
+        !data.phone ||
+        !data.provice ||
+        !data.city ||
+        !data.area ||
+        !data.xiangxi
+      ) {
+        this.$toolBus.$emit("tooltip", "请填写完整的信息");
+        return;
+      }
+      if (!/^1[3578]\d{9}$/.test(data.phone)) {
+        this.$toolBus.$emit("tooltip", "请填写正确的手机号");
+        return;
+      }
       this.$http
         .post("/api/addadr", {
           token: getCookie("token"),
-          data:{
-            name: this.name,
-            phone: this.phone
-          }
+          data: data
         })
         .then(res => {
           if (res.data.code == "1") {
             this.$toolBus.$emit("tooltip", "添加成功");
+             setTimeout(() => {
+               this.$router.push({
+               name:"address"
+             })
+             }, 1500);
+          }else{
+             this.$toolBus.$emit("tooltip", res.msg);
+             setTimeout(() => {
+               this.$router.push({
+               name:"login",
+               query:{
+                 from:"addadr"
+               }
+             })
+             }, 1000);
+             
           }
         });
     },
-    togoMine(){
+    togoMine() {
       this.$router.push({
-        name:"address"
-      })
+        name: "address"
+      });
     }
   },
   mounted() {}
@@ -109,6 +184,20 @@ console.log(res)
 }
 input::-webkit-input-placeholder {
   color: #ccc;
+}
+.pcr_list {
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.select_pro {
+  width: 50%;
+}
+.select_xiangxi {
+  width: 90%;
+  margin: 0.2rem auto;
 }
 </style>
 

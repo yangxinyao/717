@@ -10,35 +10,47 @@ let Dialog = {
         // console.log(options)
         const diaBus = new Vue({});
         Object.defineProperty(Vue.prototype, "$diaBus", {
-            value: diaBus 
+            value: diaBus
         })
         Vue.component("Dialog", {
             template: `<div class="dialog" v-show="isActive">
                 <div class="msg_box">
                     <div class="title">{{options.title}}</div>
-                    <div class="off" @click="isActive=false">{{options.off}}</div>
-                    <div class="ok" @click="isActive=false">{{options.ok}}</div>
+                    <div class="off" @click="offBtn">{{options.off}}</div>
+                    <div class="ok" @click="successBtn">{{options.ok}}</div>
                 </div>
             </div>`,
-            components:{
-                DialogBox 
+            components: {
+                DialogBox
             },
-            data(){
+            data() {
                 return {
-                    isActive:false,
+                    isActive: false,
                     options
                 }
             },
-            methods:{
-                show(msg){
+            methods: {
+                show(msg) {
                     this.options = msg;
-                    this.isActive = true; 
-                }   
+                    this.isActive = true;
+                },
+                successBtn(cb) {
+                    this.isActive = false;
+                    cb()
+                },
+                offBtn() {
+                    this.isActive = false;
+                }
             },
-            mounted(){
-                diaBus.$on("dialog",(msg)=>{
-                   this.show(msg)
+            mounted() {
+                diaBus.$on("dialog", (msg) => {
+                    this.show(msg)
                 })
+                diaBus.$on("success", (cb) => {
+                   this.successBtn(cb)
+                    
+                })
+               
             }
         })
     }
