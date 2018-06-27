@@ -11,6 +11,7 @@ import Account from "../components/sect/mine/account.vue"
 import Address from "../components/sect/mine/address.vue"
 import Customer from "../components/sect/mine/customer.vue"
 import Addadr from "../components/sect/mine/addadr.vue"
+import Order from "../components/sect/mine/order.vue"
 //
 import shou from "../components/sect/shou.vue"
 // import fen from "../components/sect/fen.vue"
@@ -99,6 +100,11 @@ let router = new Router({
       path: "/addadr",
       name: "addadr",
       component: Addadr
+    },
+    {//待收发货
+      path: "/order:type",
+      name: "order",
+      component: Order 
     },
 
   ]

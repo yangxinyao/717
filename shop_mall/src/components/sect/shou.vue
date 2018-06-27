@@ -218,7 +218,6 @@ img {
 }
 .dontai {
   width: 1rem;
-  font-size: 0.4rem;
   color: coral;
   padding: 0 0.02rem;
   box-sizing: border-box;

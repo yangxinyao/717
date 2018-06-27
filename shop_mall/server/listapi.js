@@ -1,7 +1,20 @@
 const fs = require("fs")
 const path = require("path")
 const jwt = require("jsonwebtoken")
-
+const multer = require('multer')
+// const upload = multer({
+//     dest: path.resolve(__dirname + "/upload")
+// })
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.resolve(__dirname+"/dist"))
+    },
+    filename: function (req, file, cb) {
+        let str = file.originalname.split(".")
+        cb(null, str[0] + '-' + Date.now()+"."+ str[1])
+    }
+})
+var upload = multer({ storage: storage })
 //定义接口
 module.exports = function (app) {
     app.get('/index/', function (req, res, next) {
@@ -164,8 +177,11 @@ module.exports = function (app) {
                         if (v.checked) {
                             arr.push(i)
                         }
-                        req.body.data.splice(req.body.data[arr[0]])
+                        console.log(req.body.data.splice(req.body.data[arr[0]], 1))
                     })
+                    goods[decoded.phone] = req.body.data
+                    fs.writeFileSync(__dirname + "/cart/cartlist.json", JSON.stringify(goods))
+                    console.log(req.body.data)
                     res.json({
                         code: 1,
                         msg: "请求成功",
@@ -207,24 +223,34 @@ module.exports = function (app) {
                 }
             })
         }
-    })
+    });
     // 地址管理
     app.post("/api/address", function (req, res) {
         jwt.verify(req.body.token, "userMsg", function (err, decoded) {
             if (err) {
                 res.json({
                     code: 0,
-                    msg: err
+                    msg: "登录超时，请重新登录"
                 })
             } else {
                 let addList = JSON.parse(fs.readFileSync(__dirname + "/address/address.json", "utf-8"))
                 res.json({
                     code: "1006",
                     msg: "请求成功",
-                    data: addList[decoded.phone] || []
+                    data: addList[decoded.phone]
                 })
             }
         })
+    });
+    //上传图片
+    app.post("/api/upload", upload.single('img'),function (req,res) {
+        console.log(req.file)
+        res.json({
+            code: 1,
+            msg:"上传成功",
+            url:"http://localhost:3000/"+req.file.filename
+        })
     })
+
 
 }

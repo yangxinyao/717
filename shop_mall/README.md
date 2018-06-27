@@ -73,3 +73,28 @@ For detailed explanation on how things work, consult the [docs for vue-loader](h
            "Access-Control-Allow-Origin":"*",
         "Accept-Content":"application/json,plain/text",
         "Access-Control-Allow-Headers":"Content-Type" //post)
+
+## 上传图片
+  前端：
+     let  formData = new FormData();
+     formData.append('img',e.target.files[0]);
+  后台：
+  Multer是一个用于处理的node.js中间件multipart/form-data，主要用于上传文件。它写在busboy顶部以获得最大效率。注意：Multer不会处理任何不是multipart（multipart/form-data）的表单
+
+  const multer = require('multer')
+
+    // const upload = multer({
+    //     dest: path.resolve(__dirname + "/upload")
+    // })
+
+  const storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+          cb(null, path.resolve(__dirname+"/dist"))
+      },
+      filename: function (req, file, cb) {
+          let str = file.originalname.split(".")
+          cb(null, str[0] + '-' + Date.now()+"."+ str[1])
+      }
+  })
+
+  var upload = multer({ storage: storage })

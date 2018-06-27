@@ -5,10 +5,14 @@
           <span class="iconfont icon-xiangzuo"></span><h3>设置</h3>
         </div>
         <div class="set_list">
-            <div class="set_tou" @click="touFn">
+          <!-- @click="touFn" -->
+            <div class="set_tou" >
               <span>我的头像</span>
               <div class="tou_box">
-                <p class="tou_img"><img src="../../../assets/login/tou.png" alt=""></p><span class="iconfont icon-xiangyou"></span>
+                <p class="tou_img"><img :src="url" alt="">
+                <input type="file" class="file_inp" @change="fileUpload">
+                </p>
+                <span class="iconfont icon-xiangyou"></span>
               </div>
             </div>
             <div class="set_username">
@@ -33,10 +37,12 @@
     </div>
 </template>
 <script>
-import { delCookie } from "../../../tool/cookie.js";
+import { delCookie, getCookie } from "../../../tool/cookie.js";
 export default {
   data() {
-    return {};
+    return {
+      url:"http://localhost:8080/src/assets/login/tou.png"
+    };
   },
   methods: {
     exitLogin() {
@@ -54,14 +60,23 @@ export default {
        delCookie("token");
       this.$router.push("/index/mine");
     },
-    touFn() {
-      //改头像
-      this.$diaBus.$emit("dialog", {
-        title: "拍照",
-        ok: "取消",
-        off: "从相册选择"
-      });
+    fileUpload(e){
+        // console.log(e.target.files)
+        let  formData = new FormData();
+        formData.append('img',e.target.files[0]);
+        this.$http.post("/api/upload",formData).then((res)=>{
+           console.log(res)
+           this.url=res.data.url
+        })
     }
+    // touFn() {
+    //   //改头像
+    //   this.$diaBus.$emit("dialog", {
+    //     title: "拍照",
+    //     ok: "取消",
+    //     off: "从相册选择"
+    //   });
+    // }
   }
 };
 </script>
@@ -112,11 +127,20 @@ export default {
   height: 1.2rem;
   border-radius: 50%;
   border: 1px solid #ccc;
+  position: relative;
+}
+.file_inp{
+  position: absolute;
+  top:0;
+  width:100%;
+  height:100%;
+  opacity: 0;
 }
 .tou_img > img {
   width: 100%;
   height: 100%;
   display: block;
+  border-radius: 50%;
 }
 .set_username {
   width: 100%;

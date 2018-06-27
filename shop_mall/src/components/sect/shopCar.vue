@@ -58,14 +58,15 @@ export default {
       this.$store.dispatch("allcheck");
     },
     changeEdit() {
+      this.edit="完成"
+      this.account="删除"
       this.$http.post("/api/edit", { 
         token: getCookie("token"),
         data:this.$store.state.shopCarlist
          }).then(res => {
-        console.log(res);
+           console.log(res.data)
       });
-      // this.edit="完成"
-      // this.account="删除"
+     
     }
   },
   computed: {

@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const ejs=require("ejs")
 app.engine('html', ejs.__express);
 app.set('view engine', 'html')
-app.use(express.static(path.resolve(process.cwd()+"/../dist")))
+app.use(express.static(path.resolve(process.cwd()+"/../server/dist")))
 
 app.all("*",function(req,res,next){
     res.header({

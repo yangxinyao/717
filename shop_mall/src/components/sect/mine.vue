@@ -14,23 +14,23 @@
             <h3>我的店铺</h3><span class="iconfont icon-xiangyou"></span>
           </div>
           <div class="list_state">
-            <dl>
+            <dl @click="toOrder('obligation')">
               <dt><i class="iconfont icon-daifukuan"></i></dt>
               <dd>待付款</dd>
             </dl>
-            <dl>
+            <dl @click="toOrder('wait')">
               <dt><i class="iconfont icon-daifahuo"></i></dt>
               <dd>待发货</dd>
             </dl>
-            <dl>
+            <dl @click="toOrder('payment')">
               <dt><i class="iconfont icon-daishouhuo"></i></dt>
               <dd>待收货</dd>
             </dl>
-            <dl>
+            <dl @click="toOrder('aftersale')">
               <dt><i class="iconfont icon-shouhoubaozhang"></i></dt>
               <dd>售后</dd>
             </dl>
-            <dl class="mine_order">
+            <dl class="mine_order" @click="toOrder('myorder')">
               <dt><i class="iconfont icon-aiguifanfile"></i></dt>
               <dd>我的订单<span class="iconfont icon-xiangyou"></span></dd>
             </dl>
@@ -70,6 +70,15 @@ export default {
     tosetup() {
       this.$router.push("/setup");
     },
+    toOrder(type){
+      // console.log(type)
+      this.$router.push({
+        name:"order",
+        params:{
+          type:type
+        }
+      })
+    }
   },
   mounted() {}
 };

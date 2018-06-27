@@ -355,17 +355,16 @@ margin: 0 auto;
   color: #bd2c00;
   background-color: #ffecec;
 }
-
 .hljs-link {
   text-decoration: underline;
 }
-
 pre{
   background: #fff;
 }
 body,html{
   width:100%;
   height:100%;
+  font-size: 0.32rem;
 }
 
 

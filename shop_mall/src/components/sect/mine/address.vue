@@ -22,6 +22,7 @@
       <div class="adr_btn">
          <button @click="adrFn">+新增地址</button>
       </div>
+      <tooltip></tooltip>
       <Dialog ref="dia"></Dialog>
     </div>
 </template>
@@ -30,13 +31,16 @@ import { getCookie } from "../../../tool/cookie.js";
 export default {
   data() {
     return {
-      data: []
+      data:[]
     };
   },
   created() {
     this.$http.post("/api/address", { token: getCookie("token") }).then(res => {
-      console.log(res.data.data);
-      this.data = res.data.data;
+      if (res.code == 0) {
+        this.$toolBus.$emit("tootip", res.msg);
+      } else {
+        this.data = res.data.data||[];
+      }
     });
   },
   methods: {
