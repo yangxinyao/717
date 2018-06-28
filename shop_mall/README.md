@@ -75,6 +75,12 @@ For detailed explanation on how things work, consult the [docs for vue-loader](h
         "Access-Control-Allow-Headers":"Content-Type" //post)
 
 ## 上传图片
+前后台数据交互 数据分类型 纯文本、JSON、FormData(二进制)
+
+// application/json和application/x-www-form.urlencoded 只能上传文本格式的文件
+
+// multipart/form-data是以二进制的形式将文件上传
+
   前端：
      let  formData = new FormData();
      formData.append('img',e.target.files[0]);
